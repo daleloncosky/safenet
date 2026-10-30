@@ -216,3 +216,15 @@ body, html {
   font-size: 1rem;
   line-height: 1.5;
 }
+
+.analysis-form { width: min(100%, 640px); display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.auto-textarea { width: 100%; min-height: 100px; padding: 16px; text-align: left; caret-color: auto; font-weight: normal; }
+.privacy-note { font-size: .85rem; line-height: 1.6; max-width: 62ch; }
+.subtitle { max-width: 60ch; text-align: center; line-height: 1.6; }
+.category-card { cursor: default; }
+.category-card h2 { font-size: 1rem; }
+.analyze-button:disabled { opacity: .65; cursor: wait; }
+:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+.result-area { overflow-wrap: anywhere; }
+@media (max-width: 480px) { .categories-container { gap: 8px; width: 100%; } .category-card { flex: 1; width: auto; padding: 8px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

@@ -1,34 +1,45 @@
-What is SafeNet?🔍
+# SafeNet
 
-SafeNet is an AI-powered phishing and scam detection tool that can be used to protect users from online fraud. It can analyze suspicious emails, URLs, and messages to determine if they are phishing attempts, malicious links, or scams.
+React interface for a phishing triage prototype built for a Rutgers hackathon in 2025. Users can submit a URL, email address, or message and review the backend's analysis.
 
-The Problem🌍
+The companion [Flask API](https://github.com/daleloncosky/safenet-backend) checks URLs with Google Safe Browsing and sends general message text to OpenAI. Email addresses receive an explicit explanation that an address alone cannot authenticate a sender. This implementation does not provide personal-data discovery or removal-request workflows.
 
-Phishing attacks and online scams are one of the most common cybersecurity threats, and can lead to:
+## Run locally
 
-    Stolen login credentials & personal data
-    Financial fraud & identity theft
-    Compromised business accounts
+Use Node.js 22.12 or newer. Node 24 is recorded in `.nvmrc`.
 
-How SafeNet Solves This Problem🛠️
+```sh
+npm ci
+cp .env.example .env
+npm start
+```
 
-    🤖 AI-Powered Scam Analysis - Uses OpenAI’s GPT model to analyze text for phishing patterns.
-    🛡️ Google Safe Browsing API - Cross-checks links against a real-time database of known malicious sites.
-    📧 Email Legitimacy Checker - Verifies email domains against trusted organizations.
-    🔢 Trust Score System (0-100) - Assigns a phishing risk level based on multiple security factors.
+Open `http://localhost:3000`. Start the companion API on port 5000. Set `VITE_API_BASE_URL` in `.env` to use a different API. Vite reads this value at build time; never put API keys in frontend environment variables.
 
-Tech Stack🖥️
+## Checks and deployment
 
-    Backend: Flask (Python) + OpenAI API + Google Safe Browsing API
-    Frontend: React (JavaScript) + Axios
-    Deployment: Flask on Render, React on Vercel
-    Security: Environment variables for API keys, HTTPS requests
+```sh
+npm test
+npm run build
+npm audit
+```
 
-Why This BUIDL is Important🚀
+The production output is `build/`. The Vite migration preserves that folder name for existing hosting configurations. `npm run preview` serves the built output locally. If `VITE_API_BASE_URL` is absent, development uses localhost and production retains the original Render API address from this project. Availability of that historical deployment is not guaranteed. Set the API address explicitly for a new deployment and add the frontend's exact origin to the backend's `ALLOWED_ORIGINS`.
 
-    Phishing is the #1 method used in 91% of cyberattacks mentioned by Deloitte
-    Current solutions (spam filters, antivirus) are not enough
-    SafeNet offers a proactive, AI-driven phishing detection system
-    Simple, fast, and accessible via web UI
+Tests cover submission, duplicate-request prevention, blank input, and service errors. They mock the API and do not call paid providers.
 
-Submission Summary(TLDR)📌 SafeNet is an AI-powered phishing and scam detection tool that protects users from online fraud by analyzing emails, URLs, and messages using OpenAI, Google Safe Browsing API, and a Trust Score system. Hosted on Render & Vercel, it delivers real-time phishing prevention for individuals and businesses.
+## Implementation
+
+- React state manages input, pending requests, and results.
+- Axios uses a request timeout and displays recoverable errors.
+- Inputs have accessible labels; result updates use a live region.
+- A pending request disables editing and repeat submission.
+- Message length is limited to match the API's 8000-character limit.
+
+## Privacy and limits
+
+Submitted URLs are sent to Google Safe Browsing. General message text is sent to OpenAI through the backend. Use synthetic examples without passwords, tokens, or personal information. The app does not independently crawl a submitted website. A missing threat match and an AI-generated assessment do not establish safety. This is a hackathon prototype; public operation also requires abuse prevention, request limits, and an appropriate privacy policy.
+
+## Repository layout
+
+`src/App.jsx` contains the interface, `src/App.css` its styling, and `src/App.test.jsx` the interaction tests. `vite.config.js` defines the build and test configuration. Dependencies are restored from the lockfile instead of being tracked in Git.
